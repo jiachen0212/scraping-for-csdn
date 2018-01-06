@@ -1,0 +1,32 @@
+#coding=utf-8
+#http://blog.csdn.net/marksinoberg/article/details/51510052
+#csdn刷单条博客的访问量.
+import urllib2,re
+from bs4 import BeautifulSoup
+
+def getHtml(url,headers):
+    req = urllib2.Request(url,headers=headers)
+    page = urllib2.urlopen(req)
+    html = page.read()
+    return html
+
+def parse(data):
+    content = BeautifulSoup(data,'lxml')
+    return content
+
+def getReadNums(data,st):
+    reg = re.compile(st)
+    return re.findall(reg,data)
+
+for url in open("urls.txt"):    #把所有的urls写在txt里,一行行的读.
+    headers = {
+    'referer':'http://blog.csdn.net/',
+    'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.94 Safari/537.36'
+    }  #设置代理
+    i = 0
+    while i<24:
+        html = getHtml(url,headers)
+        content = parse(html)
+        result = content.find_all('span',class_='link_view')
+        print result[0].get_text()
+        i = i +1
