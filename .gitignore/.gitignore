@@ -18,15 +18,18 @@ def getReadNums(data,st):
     reg = re.compile(st)
     return re.findall(reg,data)
 
+
+count = 0   #记录是哪一篇博客在增加.
 for url in open("urls.txt"):    #把所有的urls写在txt里,一行行的读.
     headers = {
     'referer':'http://blog.csdn.net/',
-    'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.94 Safari/537.36'
-    }  #设置代理
+    'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.94 Safari/537.36'}  #设置代理
     i = 0
-    while i<24:
+    while i<20:
         html = getHtml(url,headers)
         content = parse(html)
         result = content.find_all('span',class_='link_view')
         print result[0].get_text()
         i = i +1
+    count = count + 1
+    print "the csdn number is %d"%count
